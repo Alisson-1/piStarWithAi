@@ -1,30 +1,29 @@
-/*!
- * This is open-source. Which means that you can contribute to it, and help
- * make it better! Also, feel free to use, modify, redistribute, and so on.
- *
- * If you are going to edit the code, always work from the source-code available for download at
- * https://github.com/jhcp/pistar
- */
-
+// tool/app/ui/main.js
 $(document).ready(function () {
     'use strict';
 
+    // Inicialização principal do iStar
     istar.graph = istar.setup.setupModel();
     istar.paper = istar.setup.setupDiagram(istar.graph);
     istar.setupMetamodel(istar.metamodel);
-    ui.setupUi();
+    ui.setupUi(); // Configura a UI principal, o que também finaliza a configuração do istar.graph e istar.paper
 
-    //wait the ui finish loading before loading a model
-    $(document).ready(function () {
-        setTimeout(function () {
-            istar.fileManager.loadModel(istar.models.processModelParameter());
-            ui.selectPaper();//clear selection
-            }, 5);
-    });
+    // Carrega o modelo inicial após um pequeno atraso para permitir a renderização da UI
+    setTimeout(function () {
+        istar.fileManager.loadModel(istar.models.processModelParameter());
+        ui.selectPaper(); // Limpa a seleção
 
-    // ui.alert('Hi there, this is a beta version of the tool, currently under testing. Please send us your feedback at <a href="https://goo.gl/forms/SaJlelSfkTkp819t2">https://goo.gl/forms/SaJlelSfkTkp819t2</a>',
-    //     'Beta version');
+        // Inicializa o controlador do chat APÓS o setup principal da UI e o carregamento do modelo inicial
+        if (typeof chatApp !== 'undefined' && typeof chatApp.initController === 'function') {
+            console.log('[Main.js] Chamando chatApp.initController().');
+            chatApp.initController();
+        } else {
+            console.error('[Main.js] chatApp.initController não foi encontrado. O chat não será inicializado ou pode não funcionar corretamente.');
+        }
+    }, 10); // Um pequeno timeout
+
+    // ui.alert(...)
 });
 
 /*definition of globals to prevent undue JSHint warnings*/
-/*globals istar:false, ui:false, console:false, $:false */
+/*globals istar:false, ui:false, console:false, $:false, chatApp:false */

@@ -666,7 +666,9 @@ var istar = function () {
             }
             return isDuplicated;
         }
+        
     };
+    
 }();
 
 /*definition of globals to prevent undue JSHint warnings*/
